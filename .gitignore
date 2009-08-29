@@ -1,0 +1,13 @@
+# build
+Makefile
+*.o
+*.bin
+
+# output
+*.supp
+
+# valgrind for Mac use it
+*.dSYM
+
+# Mac stuff
+.DS_Store

@@ -1,0 +1,26 @@
+What is it?
+-----------
+
+This tool will help you to generate suppression files for Valgrind's tool
+Memcheck (http://valgrind.org/info/tools.html#memcheck).
+
+One day I found myself in searching memory leaks in big complex project. The
+main problem was that it has very old Linux kernel and system libraries with
+brain-dead patches. Memcheck's output was filled with leaks and errors in deep
+levels, not in our project itself. Since I wasn't able to do anything with
+this, I created this tool.
+
+How?
+----
+Idea is simple: you write a small chunk of code that reproduce this leaks and
+errors inside third-party libraries, then run it through Memcheck and get
+suppression file. Collecting this chunks is the main goal of this project.
+
+License
+-------
+Public Domain.
+Ideas, patches and merge requests are welcome.
+
+--
+Aleksey "AlekSi" Palazhchenko
+http://gitorious.org/valgrind-suppressions
