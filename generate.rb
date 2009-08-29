@@ -3,7 +3,7 @@
 # Some constants.
 OS = `uname -s`.chomp
 VALGRIND_VERSION = `valgrind --version`.chomp
-MEMCHECK_COMMAND = "valgrind --leak-check=full --gen-suppressions=all --error-limit=no #{'--dsymutil=yes' if OS=='Darwin'} "
+MEMCHECK_COMMAND = "valgrind --leak-check=full --gen-suppressions=all --error-limit=no --num-callers=30 --show-reachable=yes #{'--dsymutil=yes' if OS=='Darwin'} "
 SUPPRESSION_FILE_SUFFIX = [OS, `uname -m`, `uname -r`].join("_").delete("\n")
 # TODO lsb_release for GNU/Linux
 
@@ -16,9 +16,10 @@ def generate_suppression(program_path, suppression_path)
   f << "# Valgrind version: #{VALGRIND_VERSION}\n\n"
 
   Dir.chdir File.dirname(program_path) do
-    print "Running #{program_base} ..."; $stdout.flush
+    print "Running #{program_base} ... "; $stdout.flush
+    start = Time.now
     output = `#{MEMCHECK_COMMAND + './'+ program_base} 2>&1`
-    puts
+    puts "Done in #{(Time.now - start).to_i} seconds."
     output.each do |line|
       next if (line =~ /^==\d+==/) || (line =~ /^--\d+--/)
       f.puts line
