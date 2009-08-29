@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 
 # Some constants.
-MEMCHECK_COMMAND = "valgrind --dsymutil=yes --leak-check=full --gen-suppressions=all --error-limit=no "
+OS = `uname -s`.chomp
 VALGRIND_VERSION = `valgrind --version`.chomp
-SUPPRESSION_FILE_SUFFIX = [`uname -s`, `uname -m`, `uname -r`].join("_").delete("\n")
+MEMCHECK_COMMAND = "valgrind --leak-check=full --gen-suppressions=all --error-limit=no #{'--dsymutil=yes' if OS=='Darwin'} "
+SUPPRESSION_FILE_SUFFIX = [OS, `uname -m`, `uname -r`].join("_").delete("\n")
 # TODO lsb_release for GNU/Linux
 
 def generate_suppression(program_path, suppression_path)
