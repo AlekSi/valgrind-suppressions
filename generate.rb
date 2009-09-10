@@ -1,11 +1,23 @@
 #!/usr/bin/env ruby
 
 # Some constants.
+START_DIR = File.dirname(__FILE__)
+SUPPRESSIONS_DIR = START_DIR + '/Suppressions/'
 OS = `uname -s`.chomp
 VALGRIND_VERSION = `valgrind --version`.chomp
 MEMCHECK_COMMAND = "valgrind --leak-check=full --gen-suppressions=all --error-limit=no --num-callers=30 --show-reachable=yes #{'--dsymutil=yes' if OS=='Darwin'} "
 SUPPRESSION_FILE_SUFFIX = [OS, `uname -m`, `uname -r`].join("_").delete("\n")
 # TODO lsb_release for GNU/Linux
+
+
+def filter_suppression(suppression)
+  filtered = []
+  suppression.each do |line|
+    break if line =~ /fun:main$/
+    filtered << line
+  end
+  suppression = filtered
+end
 
 def generate_suppression(program_path, suppression_path)
   program_base = File.basename(program_path)
@@ -20,11 +32,24 @@ def generate_suppression(program_path, suppression_path)
     start = Time.now
     output = `#{MEMCHECK_COMMAND + './'+ program_base} 2>&1`
     puts "Done in #{(Time.now - start).to_i} seconds."
+
+    in_suppression_block = false
+    suppression = []
     output.each do |line|
-      next if (line =~ /^==\d+==/) || (line =~ /^--\d+--/)
-      f.puts line
+      next if (line =~ /^==\d+==/) || (line =~ /^--\d+--/)  # valgrind's output
+
+      in_suppression_block = true  if line == "{\n"
+      in_suppression_block = false if line == "}\n"
+
+      if in_suppression_block
+        suppression << line
+      elsif not suppression.empty?
+        f.puts filter_suppression(suppression), "}\n\n"
+        suppression = []
+      end
     end
   end
+
   f.close
 end
 
@@ -38,10 +63,8 @@ def list_of_programs(start_dir)
   return res
 end
 
-START_DIR = File.dirname(__FILE__)
-SUPPRESSIONS_DIR = START_DIR + '/Suppressions/'
-Dir.mkdir SUPPRESSIONS_DIR rescue nil
 
+Dir.mkdir SUPPRESSIONS_DIR rescue nil
 programs = list_of_programs( START_DIR )
 programs.each do |program_path|
   suppression_path  = SUPPRESSIONS_DIR + File.basename(program_path, '.bin')
