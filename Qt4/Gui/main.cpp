@@ -9,6 +9,8 @@ int main(int argc, char *argv[])
 	// created in stack - no leak
 	QWidget widget1;
 	widget1.show();
+	widget1.activateWindow();
+	widget1.setFocus();
 
 	// created with parent
 	QWidget *widget2 = new QWidget(&widget1);
@@ -22,6 +24,8 @@ int main(int argc, char *argv[])
 	// delete later
 	QWidget *widget4 = new QWidget;
 	widget4->show();
+	widget4->activateWindow();
+	widget4->setFocus();
 	widget4->deleteLater();
 
 	QTimer::singleShot(500, &widget1, SLOT(close()));
