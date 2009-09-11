@@ -15,18 +15,32 @@ module Valgrind
 
   # Returns dir where generated suppressions are stored
   def self.suppressions_dir()
-    File.dirname(__FILE__) + '/Suppressions/'
+    File.dirname(File.expand_path(__FILE__)) + '/Suppressions/'
+  end
+
+  # Returns string '--suppressions=<filename1> --suppressions=<filename2> ... ',
+  # which contains all generated suppression files.
+  def self.suppressions_for_valgrind()
+    res = '';
+    Dir.glob(suppressions_dir + '*.supp') { |item| res += "--suppressions=#{item} " }
+    res
   end
 
   # Runs program under memcheck
-  def self.run_memcheck(memcheck_params, program_path)
-    cmd = 'valgrind --leak-check=full --error-limit=no --num-callers=30 --show-reachable=yes '
+  def self.run_memcheck(program_path, generate_mode)
+    cmd = 'valgrind --leak-check=full --error-limit=no --num-callers=24 --show-reachable=yes --gen-suppressions=all '
+    cmd += suppressions_for_valgrind
     cmd += '--dsymutil=yes ' if os == 'Darwin'
-    cmd += memcheck_params
+    cmd += "./#{File.basename(program_path)}"
 
     # Changed current dir for confidence
     Dir.chdir File.dirname(program_path) do
-      return `#{cmd + ' ./'+File.basename(program_path)} 2>&1`
+      if generate_mode
+        return `#{cmd} 2>&1`
+      else
+        system cmd
+      end
     end
   end
+
 end

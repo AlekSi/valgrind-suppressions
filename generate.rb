@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'valgrind'
+require "#{File.dirname(File.expand_path(__FILE__))}/valgrind"
 require 'fileutils'
 
 # Basic filter for suppression
@@ -25,7 +25,7 @@ def generate_suppression(program_path, suppression_path)
 
   print "Running #{program_base} ... "; $stdout.flush
   start = Time.now
-  output = Valgrind::run_memcheck('--gen-suppressions=all', program_path)
+  output = Valgrind::run_memcheck(program_path, true)
   puts "Done in #{(Time.now - start).to_i} seconds."
 
   in_suppression_block = false
@@ -57,7 +57,7 @@ def list_of_programs(start_dir)
   return res
 end
 
-FileUtils.remove_dir Valgrind::suppressions_dir
+FileUtils.remove_dir Valgrind::suppressions_dir rescue nil
 FileUtils.mkdir Valgrind::suppressions_dir
 programs = list_of_programs( File.dirname(__FILE__) )
 programs.each do |program_path|
