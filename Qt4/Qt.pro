@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS = Core Gui
+SUBDIRS = Core Gui Sql
