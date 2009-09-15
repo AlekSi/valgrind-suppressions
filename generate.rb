@@ -7,7 +7,8 @@ require 'fileutils'
 def filter_suppression(suppression)
   filtered = []
   suppression.each do |line|
-    break if line =~ /fun:main$/
+    break if line =~ /fun:main$/i
+    break if line =~ /valgrind/i
     filtered << line
   end
   suppression = filtered
