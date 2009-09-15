@@ -1,0 +1,4 @@
+struct ValgrindSuppressionsForStream
+{
+	ValgrindSuppressionsForStream();
+};
