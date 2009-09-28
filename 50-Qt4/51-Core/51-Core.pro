@@ -1,5 +1,5 @@
 include($$PWD/../common.pri)
-TARGET = qt4-core.bin
+TARGET = 51-qt4-core.bin
 QT = core
 
 SOURCES += $$PWD/main.cpp

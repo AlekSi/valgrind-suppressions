@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS = 10-Core 20-Sql 50-Gui
+SUBDIRS = 51-Core 54-Sql 55-Gui
