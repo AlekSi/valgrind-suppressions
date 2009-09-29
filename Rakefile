@@ -32,7 +32,7 @@ end
 
 
 def build(mode)
-  Dir.glob('??-*/') do |dir|
+  Dir.glob('??-*/').sort.each do |dir|
     Dir.chdir dir do
       build_with_gcc(mode)    unless Dir.glob('*.c').empty?
       build_with_gxx(mode)    unless Dir.glob('*.cpp').empty?
@@ -41,10 +41,12 @@ def build(mode)
   end
 end
 
+desc "Build generators in debug mode"
 task :build_debug do
   build :debug
 end
 
+desc "Build generators in release mode"
 task :build_release do
   build :release
 end
