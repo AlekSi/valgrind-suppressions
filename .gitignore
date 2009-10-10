@@ -2,6 +2,7 @@
 Makefile
 *.o
 *.bin
+moc_*.cpp
 
 # output
 *.supp
