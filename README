@@ -1,5 +1,5 @@
 What is it?
------------
+===========
 
 This tool will help you to generate suppression files for Valgrind's tool
 Memcheck (http://valgrind.org/info/tools.html#memcheck).
@@ -10,14 +10,24 @@ brain-dead patches. Memcheck's output was filled with leaks and errors in deep
 levels, not in our project itself. Since I wasn't able to do anything with
 this, I created this tool.
 
+
 How?
-----
+====
+
 Idea is simple: you write a small chunk of code that reproduce this leaks and
 errors inside third-party libraries, then run it through Memcheck and get
 suppression file. Collecting this chunks is the main goal of this project.
 
+Usage
+=====
+
+rake build_debug (or build_release)
+rake generate
+./run-memcheck <program> <args for program>
+
+
 License
--------
+=======
 Public Domain.
 Ideas, patches and merge requests are welcome.
 

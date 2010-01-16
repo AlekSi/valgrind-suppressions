@@ -50,3 +50,8 @@ desc "Build generators in release mode"
 task :build_release do
   build :release
 end
+
+desc "Generate suppressions"
+task :generate do
+  sh "/usr/bin/env ruby ./generate.rb"
+end

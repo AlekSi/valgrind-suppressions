@@ -2,4 +2,5 @@
 
 require "#{File.dirname(File.expand_path(__FILE__))}/valgrind"
 
+abort "Usage: ./run-memcheck <program> <args for program>" if $*.count == 0
 Valgrind::run_memcheck($*.join(' '), false)
