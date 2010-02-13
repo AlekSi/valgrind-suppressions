@@ -58,8 +58,8 @@ def list_of_programs(start_dir)
   return res
 end
 
-FileUtils.remove_dir Valgrind::suppressions_dir rescue nil
-FileUtils.mkdir Valgrind::suppressions_dir
+
+FileUtils.rm( Dir.glob(Valgrind::suppressions_dir + '/??-*.supp') )
 programs = list_of_programs( File.dirname(__FILE__) ).sort
 programs.each do |program_path|
   suppression_path  = Valgrind::suppressions_dir + File.basename(program_path, '.bin')
